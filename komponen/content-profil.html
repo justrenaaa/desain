@@ -1,0 +1,191 @@
+<header class="text-white py-2 shadow" style="background-color: #FF78AC;">
+        <div class="container text-center"></div>
+        <h2 class="text-center">Profil</h2>
+    </header>
+<main class="container py-5">
+    <div class="card shadow-sm">
+        <div class="card-body" style="background-color: #e9f1fa;">
+            <div>
+                <h3 class="mb-4"><strong>Profil Kampus PSDKU POLNEP Sukamara</strong></h3>
+                <img src="img/foto-4.jpeg" alt="Foto PSDKU Polnep Sukamara" class="img-fluid rounded" style="max-width: 100%; height: auto">
+
+                <div class="row mt-5">
+                    <!-- Nama kampus     -->
+                    <h5 class="text-justify">Nama Kampus</h5>
+                    <p class="text-justify">Program Studi Di Luar Kampus Utama (PSDKU) Politeknik Negeri Pontianak di Sukamara</p>
+
+                    <!-- alamat kampus -->
+                    <h5 class="text-justify">Alamat Kampus</h5>
+                    <p class="text-justify">Jln. Tjilik Riwut Km 8, Natai Sedawak, Kec. Sukamara, Kab. Sukamara, Kalimantan Tengah</p>
+                    
+                    <!-- tahun berdiri -->
+                     <h5 class="text-center">Tahun didirikan</h5>
+                     <p class="text-justify">2023</p>
+
+                    <!-- sejarh singkat  -->
+                     <h5>Sejarah Singkat</h5>
+                     <p>PSDKU Polnep Sukamara berdiri sebagai hasil kerja sama antara Politeknik Negeri Pontianak dan Pemerintah Kabupaten Sukamara. Kampus ini didirikan untuk memperluas akses pendidikan vokasi berkualitas di wilayah Kalimantan Tengah, khususnya daerah perbatasan dan pesisir. Dengan berdirinya PSDKU, diharapkan masyarakat lokal dapat memperoleh pendidikan tinggi yang relevan dengan kebutuhan industri.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+  
+               
+                    <!-- Program Studi
+                    <div class="col-md-6">
+                        <div class="card border-1 shadow-sm">
+                            <div class="card-body">
+                                <h5 class="card-title text-center">Program Studi</h5>
+                                <ul>
+                                    <li>D3 Teknologi Informasi</li>
+                                    <li>D3 Budidaya Ikan</li>
+                                    <li>D4 Akuntansi Sektor Publik</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div> -->
+                    <!-- Fasilitas -->
+                    
+                
+
+                    
+
+    <!-- chart -->
+    <div class="row mt-5">
+        <!-- prodi -->
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body" style="background-color: #e9f1fa;">
+                    <h5 class="card-title text-center">Statistik Mahasiswa Per Prodi</h5>
+                    <canvas id="prodiChart" width="400" height="400"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- kelamin -->
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body" style="background-color: #e9f1fa;">
+                    <h5 class="card-title text-center">Statistik Mahasiswa Per Jenis Kelamin</h5>
+                    <canvas id="genderChart" width="400" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- nilai -->
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body" style="background-color: #e9f1fa;">
+                    <h5 class="card-title text-center">Statistik Nilai Mahasiswa</h5>
+                    <canvas id="nilaiChart" width="400" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- organisasi -->
+                 <div class="col-md-6">
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body" style="background-color: #e9f1fa;">
+                    <h5 class="card-title text-center">Statistik Organisasi Mahasiswa</h5>
+                    <canvas id="organisasiChart" width="400" height="400"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<?php include "komponen/data.php"; ?>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    const prodiLabels = <?= json_encode(array_keys($prodi)); ?>;
+    const prodiData = <?= json_encode(array_values($prodi)); ?>;
+
+    const genderLabels = <?= json_encode(array_keys($gender)); ?>;
+    const genderData = <?= json_encode(array_values($gender)); ?>;
+
+    const nilaiLabels = <?= json_encode(array_keys($nilai)); ?>;
+    const nilaiData = <?= json_encode(array_values($nilai)); ?>;
+
+    const organisasiRaw = <?= json_encode($organisasi); ?>;
+    const organisasiNames = Object.keys(organisasiRaw);
+    const tahunLabels = Object.keys(organisasiRaw[organisasiNames[0]]);
+
+    const datasets = organisasiNames.map(org => ({
+        label: org,
+        data: tahunLabels.map(tahun => organisasiRaw[org][tahun]),
+        fill: false,
+        borderWidth: 2,
+        tension: 0.1
+    }));
+
+    new Chart(document.getElementById('prodiChart'), {
+        type: 'bar',
+        data: {
+            labels: prodiLabels,
+            datasets: [{
+                label: 'Jumlah Mahasiswa Per Prodi',
+                data: prodiData,
+                backgroundColor: ['#ffcccc', '#b2f2bb', '#d9d9d9']
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: false }
+            }
+        }
+    });
+
+    new Chart(document.getElementById('genderChart'), {
+        type: 'pie',
+        data: {
+            labels: genderLabels,
+            datasets: [{
+                label: 'Jumlah Mahasiswa Per Jenis Kelamin',
+                data: genderData,
+                backgroundColor: ['#36a2eb', '#ff6384']
+            }]
+        },
+        options: {
+            responsive: true
+        }
+    });
+
+    new Chart(document.getElementById('nilaiChart'), {
+        type: 'radar',
+        data: {
+            labels: nilaiLabels,
+            datasets: [{
+                label: 'Jumlah Nilai Mahasiswa',
+                data: nilaiData,
+                backgroundColor: 'rgba(0, 123, 255, 0.4)',
+                borderColor: '#007bff',
+                borderWidth: 1,
+                pointBackgroundColor: 'white'
+            }]
+        },
+        options: {
+            responsive: true
+        }
+    });
+
+    new Chart(document.getElementById('organisasiChart'), {
+        type: 'line',
+        data: {
+            labels: tahunLabels,
+            datasets: datasets
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Jumlah Mahasiswa per Organisasi per Tahun'
+                }
+            }
+        }
+    });
+</script>
+
